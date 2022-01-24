@@ -1,0 +1,17 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;600;800&display=swap");
+body {
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+    margin: 0%;
+    padding: 0%;
+}
+
+#nv-txt{
+    font-family: "Coustard", sans-serif;
+}
+
+/* set placeholder font size */
+input,
+input::-webkit-input-placeholder {
+    font-size: 1.1vw;
+}
