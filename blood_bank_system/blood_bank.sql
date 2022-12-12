@@ -45,6 +45,25 @@ INSERT IGNORE INTO `patient` (`id`, `name`, `address`, `city`, `nic`, `contact`,
 	(53, 'asdas', 'dasdas', 'sadas', '1232135', '23423', 'O+');
 /*!40000 ALTER TABLE `patient` ENABLE KEYS */;
 
+-- Dumping structure for table blood_bank.users
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(250) NOT NULL,
+  `username` varchar(100) NOT NULL,
+  `password` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4;
+
+-- Dumping data for table blood_bank.users: ~6 rows (approximately)
+INSERT IGNORE INTO `users` (`id`, `name`, `username`, `password`) VALUES
+	(1, 'helili', 'helili', 'testp'),
+	(2, 'heli', 'h', 'h'),
+	(3, 'hemamali', 'hemamali', 'hm'),
+	(10, 'ravindu', 'rav', 'r'),
+	(11, 'kulatunga', 'kule', 'k'),
+	(12, 'prabuddha', 'prabu', 'p');
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
