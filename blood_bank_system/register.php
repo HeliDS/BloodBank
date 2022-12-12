@@ -23,16 +23,24 @@
     <title>Blood Bank</title>
 </head>
 
-<body class="bg-info">
+<body class="bg-danger">
     <div id="template-bg-1">
         <div
             class="d-flex flex-column min-vh-100 justify-content-center align-items-center pt-5">
             <div class="card p-4 text-light bg-dark mb-5">
                 <div class="card-header">
-                    <h3>Sign In</h3>
+                    <h3>Sign Up</h3>
                 </div>
                 <div class="card-body w-100">
                     <form name="login" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
+                        <div class="input-group form-group mt-3">
+                            <div class="bg-secondary rounded-start">
+                                <span class="m-3"><i
+                                    class="fas fa-user mt-2"></i></span>
+                            </div>
+                            <input type="text" class="form-control"
+                                placeholder="your name" name="name">
+                        </div>
                         <div class="input-group form-group mt-3">
                             <div class="bg-secondary rounded-start">
                                 <span class="m-3"><i
@@ -48,41 +56,50 @@
                             <input type="password" class="form-control"
                                 placeholder="password" name="password">
                         </div>
+                        <div class="input-group form-group mt-3">
+                            <div class="bg-secondary rounded-start">
+                                <span class="m-3"><i class="fas fa-key mt-2"></i></span>
+                            </div>
+                            <input type="password" class="form-control"
+                                placeholder="verify password" name="password2">
+                        </div>
     
                         <div class="form-group mt-3">
-                            <input type="submit" value="Login"
+                            <input type="submit" value="Register"
                                 class="btn bg-secondary float-end text-white w-100"
                                 name="login-btn">
                         </div>
                     </form>
                     <?php 
                         if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                            $name = test_input($_POST['name']);  
                             $username = test_input($_POST['username']);  
                             $password = test_input($_POST['password']);  
+                            $password2 = test_input($_POST['password2']);  
                             
                             //to prevent from mysqli injection  
+                            $name = stripcslashes($name);  
                             $username = stripcslashes($username);  
                             $password = stripcslashes($password);  
+                            $password2 = stripcslashes($password2);  
+                            $name = mysqli_real_escape_string($conn, $name);  
                             $username = mysqli_real_escape_string($conn, $username);  
                             $password = mysqli_real_escape_string($conn, $password);  
-                            
-                            $sql = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";  
-                            $result = mysqli_query($conn, $sql);  
-                            $row = mysqli_fetch_array($result, MYSQLI_ASSOC);  
-                            $count = mysqli_num_rows($result);  
-                                
-                            if($count == 1){  
-                                // echo "<h1><center> Login successful </center></h1>";  
-                                $_SESSION['login_user'] = $username;
-                                header("Location:home.php");
-                                exit();
-                            }  
-                            else{  
-                                // echo "<h1> Login failed. Invalid username or password.</h1>";  
-                                $loginResult = "Login failed. Invalid username or password.";
-                                // $_SESSION("loginResult") = "Login failed. Invalid username or password.";
-                            }
+                            $password2 = mysqli_real_escape_string($conn, $password2);  
 
+                            if($password == $password2 && !empty($password) && !empty($password2)){
+                                $sql = "INSERT INTO users (name, username, password) VALUES ('$name', '$username', '$password')";  
+
+                                if ($conn->query($sql) === TRUE) {
+                                    $regResultSuccess = "User registered successfully!";
+                                } else {
+                                    $regResult = "Error: " . $sql . "<br>" . $conn->error;
+                                }
+
+                            }else{
+                                $regResult = "Please verify password correctly!";
+
+                            }
                         }
 
                         function test_input($data) {
@@ -92,21 +109,19 @@
                             return $data;
                         }
 
-                        if(!empty($loginResult)){
+                        if(!empty($regResult)){
                     ?>
-                    <div class="text-danger"><?php echo $loginResult;?></div>
-                    <?php }?>
+                    <div class="text-danger"><?php echo $regResult;?></div>
+                    <?php }
+
+                        if(!empty($regResultSuccess)){  
+                    ?>
+                    <div class="text-success"><?php echo $regResultSuccess;?></div>
+                    <?php } ?>
                 </div>
                 <div class="card-footer">
-                    <div class="d-flex justify-content-center">
-                        <div class="row">
-                        <div class="text-primary">If you are a registered
-                            user, login here.</div>
-                        </div>
-                        <div class="row">
-                        <a href="register.php" class="btn btn-success mt-5">Register</a>
-                        </div>
-
+                    <div class="d-flex justify-content-end">
+                        <a href="index.php" class="btn btn-primary">Login</a>
                     </div>
                 </div>
             </div>
