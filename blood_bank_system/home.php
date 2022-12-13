@@ -2,7 +2,7 @@
     include('session.php');
     ob_start(); //prevent  Warning: Cannot modify header information - headers already sent in 000webhost
     require_once('connection.php'); 
-    // session_start();
+    // session_start(); since session.php included and has session started inside it, no need to start session again
 ?>
 <!doctype html>
 <html lang="en">
@@ -36,7 +36,7 @@
             <div class=" align-self-center">
 
                 <select class="form-control" name="filter_b_grp" >
-                    <option disabled selected>ලේ වර්ගය</option>
+                    <option disabled selected>Blood Group</option>
                     <!-- added php to keep selected value after submit the form also-->
                     <option value="A+" <?php if(isset($_POST['filter_b_grp']) && $_POST['filter_b_grp'] == 'A+') {echo "selected='selected'"; } ?> >A+</option>
                     <option value="A-" <?php if(isset($_POST['filter_b_grp']) && $_POST['filter_b_grp'] == 'A-') {echo "selected='selected'"; } ?> >A-</option>
@@ -73,34 +73,34 @@
             <div class="col-md-2">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item active" aria-current="page">දායකයාගේ විස්තර</li>
+                        <li class="breadcrumb-item active" aria-current="page">Doner Information</li>
                     </ol>
                 </nav>
                 <form method="post" id="detail-fm">
                     <div class="form-group">
                         <label>Name</label>
-                        <input type="text" class="form-control" name="name" placeholder="නම ලබා දෙන්න ">
+                        <input type="text" class="form-control" name="name" placeholder="Enter Name ">
                     </div>
                     <div class="form-group">
                         <label>Address</label>
-                        <input type="text" class="form-control" name="address" placeholder="ලිපිනය (නගරය රහිත) ">
+                        <input type="text" class="form-control" name="address" placeholder="Address (Without City) ">
                     </div>
                     <div class="form-group">
                         <label>City</label>
-                        <input type="text" class="form-control" name="city" placeholder="නගරය ">
+                        <input type="text" class="form-control" name="city" placeholder="City ">
                     </div>
                     <div class="form-group">
                         <label>NIC</label>
-                        <input type="text" class="form-control" name="nic" placeholder="හැඳුනුම්පත් අංකය ">
+                        <input type="text" class="form-control" name="nic" placeholder="NIC ">
                     </div>
                     <div class="form-group">
                         <label>Contact</label>
-                        <input type="text" class="form-control" name="contact" placeholder="දුරකතන අංකය ">
+                        <input type="text" class="form-control" name="contact" placeholder="Phone number ">
                     </div>
                     <div class="form-group">
                         <label>Blood Group</label>
                         <select class="form-control" name="b_grp">
-                            <option disabled selected>ලේ වර්ගය</option>
+                            <option disabled selected>Select Blood Group</option>
                             <option>A+</option>
                             <option>A-</option>
                             <option>B+</option>
@@ -111,7 +111,7 @@
                             <option>AB-</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-secondary btn-block" name="add_donor"><i class="fas fa-sign-in-alt"></i> එක් කරන්න </button>
+                    <button type="submit" class="btn btn-secondary btn-block" name="add_donor"><i class="fas fa-sign-in-alt"></i> Add Doner </button>
                 </form>
                 <?php
                 if ( isset($_POST['add_donor'])){
@@ -125,20 +125,31 @@
 
                     $sql="INSERT INTO patient(name,address,city,nic,contact,b_group) VALUES ('{$name}','{$address}','{$city}','{$nic}','{$contact}','{$b_grp}')";
 
-                    if ($conn->query($sql)){
-                        echo"
-                        <div class='alert alert-success mt-3' role='alert'>
-                        ඔබ විසින් සාර්ථකව දායකයා එක් කරන ලදි 
-                        </div>
-                        ";
-                    }
-                    else{
+                    try{
+                        if ($conn->query($sql)){
+                            echo"
+                            <div class='alert alert-success mt-3' role='alert'>
+                            Doner added successfully!
+                            </div>
+                            ";
+                        }else{
+                            echo"
+                            <div class='alert alert-danger mt-3' role='alert'>
+                            Failed to Add
+                            </div>
+                            ";
+                        
+                        }
+
+                    }catch(Exception $e){
                         echo"
                         <div class='alert alert-danger mt-3' role='alert'>
-                        එක් කිරීම අසාර්ථකයි 
+                        Error: $e
                         </div>
                         ";
                     }
+
+                   
 
                 }
                 ?>
@@ -147,9 +158,9 @@
             <div class="col-md-10">
                 <div class="row">
                     <div class="card-deck justify-content-center col-md-12 pt-3">
-                            <div class="card col-md-4 flex-fill text-white bg-success mb-3 text-center" style="max-width: 18rem;">
+                            <div class="card col-md-6 flex-fill text-white bg-success mb-3 text-center">
                                 <div class="card-body">
-                                    <h5 class="card-title">Number of Donors </h5>
+                                    <h5 class="card-title">Total Doners </h5>
                                     <h3 class="card-text">
                                         <?php 
                                             $readTable = "SELECT COUNT(id) AS patent_count FROM patient";
@@ -161,14 +172,120 @@
                                 </div>
                             </div>
 
-                            <div class="card col-md-4 flex-fill text-white bg-warning mb-3 text-center" style="max-width: 18rem;">
+                            <div class="card col-md-6 flex-fill text-white bg-danger mb-3 text-center">
                                 <div class="card-body">
-                                    <h5 class="card-title">Number of Universal Donors (O negative) </h5>
+                                    <h5 class="card-title">O Negative </h5>
                                     <h3 class="card-text">
                                     <?php 
                                         $readTable = "SELECT COUNT(id) AS patent_count FROM patient WHERE b_group = 'O-'";
                                         $readData = $conn->query($readTable);
                                         $row = $readData->fetch_assoc();
+                                        echo ($row["patent_count"]);
+                                    ?>
+                                    </h3>
+                                    <p>(Universal Doners)</p>
+                                </div>
+                            </div>
+
+                            
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="card-deck justify-content-center col-md-12 pt-3">
+                    <div class="card col-md-1 flex-fill text-white bg-primary mb-3 text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title">A+ </h5>
+                                    <h3 class="card-text">
+                                    <?php 
+                                        $sql = "SELECT COUNT(id) AS patent_count FROM patient WHERE b_group = 'A+'";
+                                        $read_data = $conn->query($sql);
+                                        $row = $read_data->fetch_assoc();
+                                        echo ($row["patent_count"]);
+                                    ?>
+                                    </h3>
+                                </div>
+                            </div>
+
+                            <div class="card col-md-1 flex-fill text-white bg-primary mb-3 text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title">A- </h5>
+                                    <h3 class="card-text">
+                                    <?php 
+                                        $sql = "SELECT COUNT(id) AS patent_count FROM patient WHERE b_group = 'A-'";
+                                        $read_data = $conn->query($sql);
+                                        $row = $read_data->fetch_assoc();
+                                        echo ($row["patent_count"]);
+                                    ?>
+                                    </h3>
+                                </div>
+                            </div>
+
+                            <div class="card col-md-1 flex-fill text-white bg-secondary mb-3 text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title">B+ </h5>
+                                    <h3 class="card-text">
+                                    <?php 
+                                        $sql = "SELECT COUNT(id) AS patent_count FROM patient WHERE b_group = 'B+'";
+                                        $read_data = $conn->query($sql);
+                                        $row = $read_data->fetch_assoc();
+                                        echo ($row["patent_count"]);
+                                    ?>
+                                    </h3>
+                                </div>
+                            </div>
+
+                            <div class="card col-md-1 flex-fill text-white bg-secondary mb-3 text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title">B- </h5>
+                                    <h3 class="card-text">
+                                    <?php 
+                                        $sql = "SELECT COUNT(id) AS patent_count FROM patient WHERE b_group = 'B-'";
+                                        $read_data = $conn->query($sql);
+                                        $row = $read_data->fetch_assoc();
+                                        echo ($row["patent_count"]);
+                                    ?>
+                                    </h3>
+                                </div>
+                            </div>
+
+                            <div class="card col-md-1 flex-fill text-white bg-info mb-3 text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title">O+ </h5>
+                                    <h3 class="card-text">
+                                    <?php 
+                                        $sql = "SELECT COUNT(id) AS patent_count FROM patient WHERE b_group = 'O+'";
+                                        $read_data = $conn->query($sql);
+                                        $row = $read_data->fetch_assoc();
+                                        echo ($row["patent_count"]);
+                                    ?>
+                                    </h3>
+                                </div>
+                            </div>
+
+
+                            <div class="card col-md-2 flex-fill text-white bg-warning mb-3 text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title">AB+ </h5>
+                                    <h3 class="card-text">
+                                    <?php 
+                                        $sql = "SELECT COUNT(id) AS patent_count FROM patient WHERE b_group = 'AB+'";
+                                        $read_data = $conn->query($sql);
+                                        $row = $read_data->fetch_assoc();
+                                        echo ($row["patent_count"]);
+                                    ?>
+                                    </h3>
+                                </div>
+                            </div>
+
+                            <div class="card col-md-2 flex-fill text-white bg-warning mb-3 text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title">AB- </h5>
+                                    <h3 class="card-text">
+                                    <?php 
+                                        $sql = "SELECT COUNT(id) AS patent_count FROM patient WHERE b_group = 'AB-'";
+                                        $read_data = $conn->query($sql);
+                                        $row = $read_data->fetch_assoc();
                                         echo ($row["patent_count"]);
                                     ?>
                                     </h3>
@@ -187,10 +304,10 @@
                             <table class='table ml-3 mr-4 mt-3 table-striped table-responsive-sm table-light'>
                                 <thead class='thead-dark'>
                                     <tr>
-                                        <th scope='col'>නම</th>
-                                        <th scope='col'>ලිපිනය</th>
-                                        <th scope='col'>දුරකතන අංකය</th>
-                                        <th scope='col'>ලේ වර්ගය</th>
+                                        <th scope='col'>Name</th>
+                                        <th scope='col'>Adderess</th>
+                                        <th scope='col'>Contact No</th>
+                                        <th scope='col'>Blood Group</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -200,7 +317,6 @@
                                 $find_b_grp=$_POST['filter_b_grp'];
 
                                 $filterTable = "SELECT * FROM patient WHERE b_group ='" . "" . trim($find_b_grp) ."'";
-                                // echo $filterTable;
                                 
                                 $filterData = $conn->query($filterTable);
                                 if ($filterData->num_rows > 0){

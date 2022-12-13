@@ -25,11 +25,12 @@
     <title>Blood Bank</title>
 </head>
 
-<body class="bg-danger">
+<!-- <body class="bg-danger"> -->
+<body class="bg-danger" style="background-image: url('./blood-donation.jpg'); background-repeat: repeat-y; background-size: cover;">
     <div id="template-bg-1">
         <div
             class="d-flex flex-column min-vh-100 justify-content-center align-items-center pt-5">
-            <div class="card p-4 text-light bg-dark mb-5">
+            <div class="card p-4 text-light bg-dark mb-5 col-4">
                 <div class="card-header">
                     <h3>Sign Up</h3>
                 </div>
@@ -66,10 +67,9 @@
                                 placeholder="verify password" name="password2">
                         </div>
     
-                        <div class="form-group mt-3">
-                            <input type="submit" value="Register"
-                                class="btn bg-secondary float-end text-white w-100"
-                                name="login-btn">
+                        <div class="form-group mt-3 justify-content-center">
+                            <!-- <input type="submit" value="Register" class="btn bg-success float-end text-white w-100" name="login-btn"> -->
+                            <input type="submit" value="Register" class="btn btn-success float-end text-white w-100" name="login-btn">
                         </div>
                     </form>
                     <?php 
@@ -90,13 +90,21 @@
                             $password2 = mysqli_real_escape_string($conn, $password2);  
 
                             if($password == $password2 && !empty($password) && !empty($password2)){
+                                $password = password_hash($password, PASSWORD_BCRYPT);
+                                // echo "<script>console.log('h-password','$password');</script>";
+
                                 $sql = "INSERT INTO users (name, username, password) VALUES ('$name', '$username', '$password')";  
 
-                                if ($conn->query($sql) === TRUE) {
-                                    $regResultSuccess = "User registered successfully!";
-                                } else {
-                                    $regResult = "Error: " . $sql . "<br>" . $conn->error;
+                                try{
+                                    if ($conn->query($sql) === TRUE) {
+                                        $regResultSuccess = "User registered successfully!";
+                                    } else {
+                                        $regResult = "Error: " . $sql . "<br>" . $conn->error;
+                                    }
+                                } catch(Exception $e){
+                                    $regResult = "Error: " . $sql . ";<br>" . $conn->error;
                                 }
+                                
 
                             }else{
                                 $regResult = "Please verify password correctly!";
@@ -123,7 +131,7 @@
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-end">
-                        <a href="index.php" class="btn btn-primary">Login</a>
+                        <a href="index.php" class="btn btn-primary btn-sm">Login</a>
                     </div>
                 </div>
             </div>

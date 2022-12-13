@@ -56,13 +56,9 @@ CREATE TABLE IF NOT EXISTS `users` (
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4;
 
 -- Dumping data for table blood_bank.users: ~6 rows (approximately)
-INSERT IGNORE INTO `users` (`id`, `name`, `username`, `password`) VALUES
-	(1, 'helili', 'helili', 'testp'),
-	(2, 'heli', 'h', 'h'),
-	(3, 'hemamali', 'hemamali', 'hm'),
-	(10, 'ravindu', 'rav', 'r'),
-	(11, 'kulatunga', 'kule', 'k'),
-	(12, 'prabuddha', 'prabu', 'p');
+INSERT INTO `users` (`id`, `name`, `username`, `password`) VALUES
+	(1, 'g', 'g', '$2y$10$Knq.hsQZ6T4Nh.4akDp5OeC5LlXmr4BH7j9vpcl7b5T8812CdoFEO'),
+	(30, 'helili', 'h', '$2y$10$TKNY4m5rfcREDhU6VNBQLephFDXac.0lRVMFHfecVINk4HPLxP4Ny');
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

@@ -26,7 +26,8 @@
     <title>Blood Bank</title>
 </head>
 
-<body class="bg-info">
+<!-- <body class="bg-info"> -->
+<body class="" style="background-image: url('./blood-donation.jpg'); background-repeat: repeat-y; background-size: cover;">
     <div id="template-bg-1">
         <div
             class="d-flex flex-column min-vh-100 justify-content-center align-items-center pt-5">
@@ -54,7 +55,7 @@
     
                         <div class="form-group mt-3">
                             <input type="submit" value="Login"
-                                class="btn bg-secondary float-end text-white w-100"
+                                class="btn btn-primary float-end text-white w-100"
                                 name="login-btn">
                         </div>
                     </form>
@@ -62,6 +63,8 @@
                         if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             $username = test_input($_POST['username']);  
                             $password = test_input($_POST['password']);  
+
+                            // echo "<script>console.log('i-password','$password');</script>";
                             
                             //to prevent from mysqli injection  
                             $username = stripcslashes($username);  
@@ -69,18 +72,28 @@
                             $username = mysqli_real_escape_string($conn, $username);  
                             $password = mysqli_real_escape_string($conn, $password);  
                             
-                            $sql = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";  
+                            $sql = "SELECT * FROM users WHERE username = '$username'";  
                             $result = mysqli_query($conn, $sql);  
                             $row = mysqli_fetch_array($result, MYSQLI_ASSOC);  
                             $count = mysqli_num_rows($result);  
                                 
                             if($count == 1){  
-                                $_SESSION['login_user'] = $username;
-                                header("Location:home.php");
-                                exit();
+                                $sql_pwrd = "SELECT password FROM users WHERE username = '$username'";  
+                                $result_pwrd = mysqli_query($conn, $sql);  
+                                $row_pwrd = mysqli_fetch_array($result_pwrd, MYSQLI_ASSOC); 
+                                $hash_pwd_db = $row_pwrd['password'];
+
+                                if(password_verify($password, $hash_pwd_db )){
+                                    $_SESSION['login_user'] = $username;
+                                    header("Location:home.php");
+                                    exit();
+                                }else{
+                                    $loginResult = "Login failed. Invalid password!";
+                                }
+                                
                             }  
                             else{  
-                                $loginResult = "Login failed. Invalid username or password.";
+                                $loginResult = "Login failed. username not exists!";
                             }
 
                         }
@@ -104,7 +117,7 @@
                             user, login here.</div>
                         </div>
                         <div class="row">
-                        <a href="register.php" class="btn btn-success mt-5">Register</a>
+                        <a href="register.php" class="btn btn-light text-light btn-outline-secondary mt-5 btn-sm">Click to Register</a>
                         </div>
 
                     </div>
