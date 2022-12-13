@@ -1,5 +1,8 @@
-<?php require_once('connection.php'); ?>
-<?php session_start();?>
+<?php 
+    ob_start(); //prevent  Warning: Cannot modify header information - headers already sent in 000webhost
+    require_once('connection.php'); 
+    session_start();
+?>
 
 <!doctype html>
 <html lang="en">
@@ -72,15 +75,12 @@
                             $count = mysqli_num_rows($result);  
                                 
                             if($count == 1){  
-                                // echo "<h1><center> Login successful </center></h1>";  
                                 $_SESSION['login_user'] = $username;
                                 header("Location:home.php");
                                 exit();
                             }  
                             else{  
-                                // echo "<h1> Login failed. Invalid username or password.</h1>";  
                                 $loginResult = "Login failed. Invalid username or password.";
-                                // $_SESSION("loginResult") = "Login failed. Invalid username or password.";
                             }
 
                         }

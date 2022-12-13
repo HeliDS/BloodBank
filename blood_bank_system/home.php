@@ -1,6 +1,8 @@
 <?php 
-require_once('connection.php'); 
-session_start();
+    include('session.php');
+    ob_start(); //prevent  Warning: Cannot modify header information - headers already sent in 000webhost
+    require_once('connection.php'); 
+    // session_start();
 ?>
 <!doctype html>
 <html lang="en">
@@ -118,8 +120,8 @@ session_start();
                     $city=$_POST['city'];
                     $nic=$_POST['nic'];
                     $contact=$_POST['contact'];
-					$b_grp = isset($_POST['b_grp']) ? $_POST['b_grp'] : ''; //prevent Notice: Undefined index
                     // $b_grp=$_POST['b_grp'];
+					$b_grp = isset($_POST['b_grp']) ? $_POST['b_grp'] : ''; //prevent Notice: Undefined index
 
                     $sql="INSERT INTO patient(name,address,city,nic,contact,b_group) VALUES ('{$name}','{$address}','{$city}','{$nic}','{$contact}','{$b_grp}')";
 

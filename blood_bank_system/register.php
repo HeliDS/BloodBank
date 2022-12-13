@@ -1,5 +1,7 @@
-<?php require_once('connection.php'); ?>
-<?php session_start();?>
+<?php 
+    require_once('connection.php');
+    session_start();
+?>
 
 <!doctype html>
 <html lang="en">
